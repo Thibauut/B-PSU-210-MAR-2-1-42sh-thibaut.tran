@@ -7,10 +7,11 @@
 
 #include "../../include/my.h"
 
-char **refresh_env_loop(my_env_t *m, char *str, int i, int j)
+void refresh_env_loop(my_env_t *m, char *str, int i, int j)
 {
     for (; j != i; j += 1)
         m->env[j] = m->env[j + 1];
+    return;
 }
 
 char **refresh_env(my_env_t *m, char *str)
@@ -41,7 +42,7 @@ int if_unsetenv(my_env_t *m)
 int my_unsetenv(my_env_t *m, int *ret)
 {
     if (m->tab[1] == NULL) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         return (print_error(m->tab[0], ": Too few arguments.\n"));
     } else
         if_unsetenv(m);

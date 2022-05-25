@@ -7,59 +7,6 @@
 
 #include "../../include/my.h"
 
-void get_pipe_arg(my_env_t *m, int *ret)
-{
-    int count = 0;
-    for (int i = 0; m->line[i] != '\0'; i += 1) {
-        if (m->line[i] == ';' || m->line[i] == '>'
-        || m->line[i] == '|' || simple_redir2 || double_redir2
-        || simple_entry2 || double_entry2) {
-            count = 1;
-            get_last_pipe(m, m->line[i]);
-            break;
-        }
-    }
-    if (count == 0)
-        m->new_line = NULL;
-}
-
-void get_last_pipe_arg(my_env_t *m, char c)
-{
-    int i = 0, j = 0, verif = 0;
-    m->file = malloc(sizeof(char) * (my_strlen(m->line) + 1));
-    for (; m->line[i] != c; i += 1);
-    for (i += 1; m->line[i] == ' '; i += 1);
-    for (; m->line[i] != '\0'; i += 1) {
-        if (m->line[i] == ';' || m->line[i] == '>'
-        || m->line[i] == '|' || simple_redir2 || double_redir2
-        || simple_entry2 || double_entry2)
-            return;
-        m->file[j] = m->line[i];
-        j += 1;
-    }
-}
-
-char *get_new_line(my_env_t *m, int *ret)
-{
-    int count = 0, i = 0;
-    char *tmp = malloc(sizeof(char) * (my_strlen(m->new_line) + 1));
-    char *tmp2 = malloc(sizeof(char) * (my_strlen(m->new_line) + 1));
-    for (int j = 0; m->new_line[i] != '\0'; i += 1) {
-        if (m->new_line[i] == ';' || m->new_line[i] == '>'
-        || m->new_line[i] == '|' || simple_redir || double_redir
-        || simple_entry || double_entry)
-            count = 1;
-        if (count == 1) {
-            tmp[j] = m->new_line[i], j += 1;
-        }
-    }
-    for (int k = 2, m = 0; tmp[k] != '\0'; k += 1) {
-        tmp2[m] = tmp[k];
-        m += 1;
-    }
-    return (tmp2);
-}
-
 void exec_pipe(my_env_t *m, int *ret, char *str)
 {
     m->tab = word_to_tab(str, ' ', 0);
@@ -67,7 +14,7 @@ void exec_pipe(my_env_t *m, int *ret, char *str)
     check_cmd(str, m, ret);
 }
 
-char *my_pipe(my_env_t *m, int  *ret)
+void my_simple_pipe(my_env_t *m, int *ret)
 {
     int pipefd[2], status = 0, pipefd_status = pipe(pipefd);
     init_pipe_arg(m, ret);
@@ -88,5 +35,49 @@ char *my_pipe(my_env_t *m, int  *ret)
         close(pipefd[1]);
         waitpid(pid, &status, 0);
     }
-    return (m->new_line);
+}
+
+char *get_last_pipe_double(my_env_t *m, char c)
+{
+    char *str = malloc(sizeof(char) * (my_strlen(m->line) + 1));
+    int i = 0, j = 0, k = 0, verif = 0;
+    for (; m->line[i] != c; i += 1);
+    for (i += 2; m->line[i] == ' '; i += 1);
+    if (c == '>' || c == '<') {
+        i = check_limit_last_double(m, i, j);
+        for (i += 1; m->line[i] == ' '; i += 1);
+    }
+    for (; m->line[i] != '\0'; i += 1) {
+        str[j] = m->line[i];
+        j += 1;
+    }
+    str[j] = '\0';
+    return (str);
+}
+
+void my_double_pipe(my_env_t *m, int *ret)
+{
+    get_first_arg(m, '|');
+    get_last_arg_double(m, '|');
+    m->tab = word_to_tab(m->first_arg, ' ', 0);
+    m->path = get_path(m->env);
+    get_file_name_double(m, '|');
+    m->file = clean_name(m->file);
+    if (check_cmd(m->first_arg, m, ret) == 84 || m->verif_and == 1) {
+        m->tab = word_to_tab(m->file, ' ', 0);
+        m->path = get_path(m->env);
+    } else
+        m->new_line = get_new_line2(m, ret);
+}
+
+char *my_pipe(my_env_t *m, int  *ret, int i)
+{
+    if (m->line[i] == '|' && m->line[i + 1] != '|') {
+        my_simple_pipe(m, ret);
+        return (m->new_line);
+    }
+    if (m->line[i] == '|' && m->line[i + 1] == '|') {
+        my_double_pipe(m, ret);
+        return (m->new_line);
+    }
 }

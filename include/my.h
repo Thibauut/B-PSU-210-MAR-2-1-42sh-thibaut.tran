@@ -16,25 +16,27 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#define m_len my_strlen
-#define m_cmp my_strcmp
-#define m_cpy my_strcpy
-#define double (m->line[i] == '>' && m->line[i + 1] == '>')
-#define error1 ": Variable name must begin with a letter.\n"
-#define error2 ": Variable name must contain alphanumeric characters.\n"
-#define error3 ": Too many arguments.\n"
-#define sr1 (m->line[i] == '>' && m->line[i + 1] != '>')
-#define dr2 (m->line[i] == '>' && m->line[i + 1] == '>')
-#define se1 (m->line[i] == '<' && m->line[i + 1] != '<')
-#define se2 (m->line[i] == '<' && m->line[i + 1] == '<')
-#define simple_redir (m->new_line[i] == '>' && m->new_line[i + 1] != '>')
-#define double_redir (m->new_line[i] == '>' && m->new_line[i + 1] == '>')
-#define simple_entry (m->new_line[i] == '<' && m->new_line[i + 1] != '<')
-#define double_entry (m->new_line[i] == '<' && m->new_line[i + 1] == '<')
-#define simple_redir2 (m->line[i] == '>' && m->line[i + 1] != '>')
-#define double_redir2 (m->line[i] == '>' && m->line[i + 1] == '>')
-#define simple_entry2 (m->line[i] == '<' && m->line[i + 1] != '<')
-#define double_entry2 (m->line[i] == '<' && m->line[i + 1] == '<')
+#define M_LEN my_strlen
+#define M_CMP my_strcmp
+#define M_CPY my_strcpy
+#define DOUBLE (m->line[i] == '>' && m->line[i + 1] == '>')
+#define ERROR1 ": Variable name must begin with a letter.\n"
+#define ERROR2 ": Variable name must contain alphanumeric characters.\n"
+#define ERROR3 ": Too many arguments.\n"
+#define SR1 (m->line[i] == '>' && m->line[i + 1] != '>')
+#define DR2 (m->line[i] == '>' && m->line[i + 1] == '>')
+#define SE1 (m->line[i] == '<' && m->line[i + 1] != '<')
+#define SE2 (m->line[i] == '<' && m->line[i + 1] == '<')
+#define SIMPLE_REDIR (m->new_line[i] == '>' && m->new_line[i + 1] != '>')
+#define DOUBLE_REDIR (m->new_line[i] == '>' && m->new_line[i + 1] == '>')
+#define SIMPLE_ENTRY (m->new_line[i] == '<' && m->new_line[i + 1] != '<')
+#define DOUBLE_ENTRY (m->new_line[i] == '<' && m->new_line[i + 1] == '<')
+#define SIMPLE_REDIR2 (m->line[i] == '>' && m->line[i + 1] != '>')
+#define DOUBLE_REDIR2 (m->line[i] == '>' && m->line[i + 1] == '>')
+#define SIMPLE_ENTRY2 (m->line[i] == '<' && m->line[i + 1] != '<')
+#define DOUBLE_ENTRY2 (m->line[i] == '<' && m->line[i + 1] == '<')
+#define SP1 (m->line[i] == '|' && m->line[i + 1] != '|')
+#define SP2 (m->line[i] == '|' && m->line[i + 1] == '|')
 
 #ifndef MY_H_
     #define MY_H_
@@ -48,6 +50,7 @@ typedef struct env_s {
     char *str, *str2;
     char *stock;
     int verif;
+    int verif_and;
     char *line;
     char *tmp;
     char *file;
@@ -113,7 +116,7 @@ int pwd_tab(my_env_t *m);
 char *my_get_line(char **env, char *arg);
 char *my_semicolon(my_env_t *m, int *ret);
 int check_semicolon(char *line);
-char *my_pipe(my_env_t *m, int  *ret);
+char *my_pipe(my_env_t *m, int  *ret, int i);
 int check_pipe(char *line);
 char *my_redirection(my_env_t *m, int  *ret, int i);
 void get_first_arg(my_env_t *m, char c);
@@ -139,5 +142,7 @@ void pipe_error(pid_t pid, int pipefd);
 void get_pipe_arg(my_env_t *m, int *ret);
 void get_last_pipe_arg(my_env_t *m, char c);
 char *get_new_line(my_env_t *m, int *ret);
+char *get_new_line2(my_env_t *m, int *ret);
+char *my_andand(my_env_t *m, int *ret);
 
 #endif

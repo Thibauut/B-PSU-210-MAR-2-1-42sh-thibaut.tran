@@ -36,8 +36,8 @@ int exec_cd(char *str, int *ret, my_env_t *m)
         chdir(str);
         m->refresh_pwd = getcwd(m->refresh_pwd, 4096);
     } else {
-        *ret = 1;
-        print_error(m->tab[0], ": No such file or directory.\n");
+        *ret = 1, m->verif_and = 1;
+        print_error(str, ": No such file or directory.\n");
         return (1);
     }
     return (0);
@@ -47,17 +47,17 @@ int cd(my_env_t *m, int *ret)
 {
     char *str;
     if (m->tab[2] != NULL) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         return (print_error(m->tab[0], ": Too many arguments.\n"));
     }
     str = cd_checker(m, ret);
     DIR *is_dir = opendir(str);
     if (my_strcmp(str, my_itoa(1)) == 0) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         return (print_error("", ": No such file or directory.\n"));
     }
     if (is_dir == NULL && access(str, F_OK) == 0) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         return (print_error(str, ": Not a directory.\n"));
     }
     if (exec_cd(str, ret, m) == 1)

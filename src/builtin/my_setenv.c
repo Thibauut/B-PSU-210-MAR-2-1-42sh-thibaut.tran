@@ -63,16 +63,16 @@ int my_setenv(my_env_t *m, int *ret)
         return (my_show_word_array(m->env));
     if ((m->tab[1][0] < 'A' || m->tab[1][0] > 'Z') && (m->tab[1][0] < 'a'
     || m->tab[1][0] > 'z')) {
-        *ret = 1;
-        return (print_error(m->tab[0], error1));
+        *ret = 1, m->verif_and = 1;
+        return (print_error(m->tab[0], ERROR1));
     }
     if (is_alpha(m->tab[1]) == 0) {
-        *ret = 1;
-        return (print_error(m->tab[0], error2));
+        *ret = 1, m->verif_and = 1;
+        return (print_error(m->tab[0], ERROR2));
     }
     if (m->tab[1] != NULL && m->tab[2] != NULL && m->tab[3]) {
-        *ret = 1;
-        return (print_error(m->tab[0], error3));
+        *ret = 1, m->verif_and = 1;
+        return (print_error(m->tab[0], ERROR3));
     } else
         if_setenv(m);
     return (0);

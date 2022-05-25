@@ -58,4 +58,5 @@ char *my_redirection(my_env_t *m, int  *ret, int i)
         my_double_redir(m, ret);
         return (m->new_line);
     }
+    return (m->new_line);
 }

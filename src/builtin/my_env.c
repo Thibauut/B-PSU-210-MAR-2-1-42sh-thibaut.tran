@@ -10,12 +10,12 @@
 int my_env(my_env_t *m, int *ret)
 {
     if (m->env == NULL) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         my_putstr_error("Env is empty.\n");
         return (0);
     }
     if (m->tab[1] != NULL) {
-        *ret = 1;
+        *ret = 1, m->verif_and = 1;
         return (print_error(m->tab[0], ": Too many arguments.\n"));
     } else {
         for (int i = 0; m->env[i] != 0; i += 1)

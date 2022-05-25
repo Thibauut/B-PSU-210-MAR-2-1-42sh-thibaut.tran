@@ -23,7 +23,6 @@ void my_simple_entry(my_env_t *m, int *ret)
         exit(1);
     }
     m->save = dup(STDIN_FILENO);
-    m->verif_dup == 1;
     dup2(m->fd, STDIN_FILENO);
     m->tab = word_to_tab(m->first_arg, ' ', 0);
     m->path = get_path(m->env);
@@ -49,4 +48,5 @@ char *my_entry(my_env_t *m, int *ret, int i)
         my_double_entry(m, ret);
         return (m->new_line);
     }
+    return (m->new_line);
 }

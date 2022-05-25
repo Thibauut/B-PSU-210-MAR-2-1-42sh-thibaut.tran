@@ -25,12 +25,14 @@ void init_symbols(my_env_t *m, int *ret)
     for (; m->line[i] != '\0'; i += 1) {
         if (m->line[i] == ';')
             m->line = my_semicolon(m, ret), i = 0;
-        if (sr1 || dr2)
+        if (m->line[i] == '&' && m->line[i + 1] == '&')
+            m->line = my_andand(m, ret), i = 0, m->verif_and = 0;
+        if (SR1 || DR2)
             m->line = my_redirection(m, ret, i), i = 0;
-        if (se1 || se2)
+        if (SE1 || SE2)
             m->line = my_entry(m, ret, i), i = 0;
-        if (m->line[i] == '|')
-            m->line = my_pipe(m, ret), i = 0;
+        if (SP1 || SP2)
+            m->line = my_pipe(m, ret, i), i = 0, m->verif_and = 0;
     }
     return;
 }

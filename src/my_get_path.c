@@ -24,9 +24,9 @@ int path_cmd(my_env_t *m, int *ret)
 {
     m->path_cmd = malloc(sizeof(char *) * (tab_len(m->path) + 20));
     for (int i = 0; m->path[i] != 0; i += 1) {
-        m->path_cmd[i] = malloc(sizeof(char) * (m_len(m->path[i]) +
-        m_len(m->tab[0]) + 20));
-        m->path_cmd[i] = m_cpy(m->path_cmd[i], m->path[i]);
+        m->path_cmd[i] = malloc(sizeof(char) * (M_LEN(m->path[i]) +
+        M_LEN(m->tab[0]) + 20));
+        m->path_cmd[i] = M_CPY(m->path_cmd[i], m->path[i]);
         m->path_cmd[i] = my_strcat(m->path_cmd[i], "/");
         m->path_cmd[i] = my_strcat(m->path_cmd[i], m->tab[0]);
         if (access(m->path_cmd[i], X_OK) == 0
@@ -42,9 +42,9 @@ int path_cmd2(my_env_t *m, int *ret)
 {
     m->path_cmd = malloc(sizeof(char *) * (tab_len(m->path) + 20));
     for (int i = 0; m->path[i] != 0; i += 1) {
-        m->path_cmd[i] = malloc(sizeof(char) * (m_len(m->path[i]) +
-        m_len(m->tab[0]) + 20));
-        m->path_cmd[i] = m_cpy(m->path_cmd[i], m->path[i]);
+        m->path_cmd[i] = malloc(sizeof(char) * (M_LEN(m->path[i]) +
+        M_LEN(m->tab[0]) + 20));
+        m->path_cmd[i] = M_CPY(m->path_cmd[i], m->path[i]);
         m->path_cmd[i] = my_strcat(m->path_cmd[i], "/");
         m->path_cmd[i] = my_strcat(m->path_cmd[i], m->tab[0]);
         if (access(m->path_cmd[i], X_OK) == 0

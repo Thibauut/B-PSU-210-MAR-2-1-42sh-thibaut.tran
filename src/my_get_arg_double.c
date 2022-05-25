@@ -10,11 +10,11 @@
 int check_limit_double(my_env_t *m, int i, int j)
 {
     for (; m->line[i] != '\0'; i += 1) {
-        if (m->line[i] == '>' || double) {
+        if (m->line[i] == '>' || DOUBLE) {
             my_putstr_error("Ambiguous output redirect.\n");
             exit(EXIT_FAILURE);
         }
-        if (m->line[i] == '|')
+        if (m->line[i] == '|' || SP1)
             return (1);
         if (m->line[i] == ';')
             return (1);
@@ -30,7 +30,7 @@ void get_file_name_double(my_env_t *m, char c)
     m->file = malloc(sizeof(char) * (my_strlen(m->line) + 1));
     for (; m->line[i] != c; i += 1);
     for (i += 2; m->line[i] == ' '; i += 1);
-    if (c == '>' || c == '<') {
+    if (c == '>' || c == '<' || c == '|') {
         if (check_limit_name(m, i, j) == 1)
             return;
     }
@@ -39,7 +39,7 @@ void get_file_name_double(my_env_t *m, char c)
 int check_limit_last_double(my_env_t *m, int i, int j)
 {
     for (; m->line[i] != '\0'; i += 1) {
-        if (m->line[i] == '>' || double) {
+        if (m->line[i] == '>' || DOUBLE) {
             my_putstr_error("Ambiguous output redirect.\n");
             exit(EXIT_FAILURE);
         }
